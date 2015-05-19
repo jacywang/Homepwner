@@ -7,6 +7,8 @@
 //
 
 #import "ItemsTableViewController.h"
+#import "Item.h"
+#import "ItemStore.h"
 
 @interface ItemsTableViewController ()
 
@@ -14,9 +16,18 @@
 
 @implementation ItemsTableViewController
 
+-(instancetype)init {
+    self = [super initWithStyle:UITableViewStylePlain];
+    for (int i = 0; i < 5; i++) {
+        [[ItemStore sharedStore] createItem];
+    }
+    return self;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"UITableViewCell"];
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
     
@@ -32,26 +43,22 @@
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-#warning Potentially incomplete method implementation.
-    // Return the number of sections.
-    return 0;
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-#warning Incomplete method implementation.
-    // Return the number of rows in the section.
-    return 0;
+    return [[[ItemStore sharedStore] allItems] count];
 }
 
-/*
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:<#@"reuseIdentifier"#> forIndexPath:indexPath];
-    
-    // Configure the cell...
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"UITableViewCell"];
+    NSArray *items = [[ItemStore sharedStore] allItems];
+    Item *item = items[indexPath.row];
+    cell.textLabel.text = [item description];
     
     return cell;
 }
-*/
+
 
 /*
 // Override to support conditional editing of the table view.
